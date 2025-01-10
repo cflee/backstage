@@ -63,6 +63,7 @@ describe('readGitLabIntegrationConfig', () => {
 
     expect(output).toEqual({
       host: 'a.com',
+      group: '',
       token: 't',
       apiBaseUrl: 'https://a.com',
       baseUrl: 'https://baseurl.for.me/gitlab',
@@ -75,6 +76,7 @@ describe('readGitLabIntegrationConfig', () => {
     );
     expect(output).toEqual({
       host: 'gitlab.com',
+      group: '',
       apiBaseUrl: 'https://gitlab.com/api/v4',
       baseUrl: 'https://gitlab.com',
     });
@@ -87,6 +89,7 @@ describe('readGitLabIntegrationConfig', () => {
 
     expect(output).toEqual({
       host: 'gitlab.com',
+      group: '',
       baseUrl: 'https://gitlab.com',
       apiBaseUrl: 'https://gitlab.com/api/v4',
     });
@@ -117,6 +120,7 @@ describe('readGitLabIntegrationConfig', () => {
       ),
     ).toEqual({
       host: 'a.com',
+      group: '',
       apiBaseUrl: 'https://a.com/api',
       baseUrl: 'https://a.com',
     });
@@ -141,6 +145,7 @@ describe('readGitLabIntegrationConfigs', () => {
     );
     expect(output).toContainEqual({
       host: 'a.com',
+      group: '',
       token: 't',
       apiBaseUrl: 'https://a.com/api/v4',
       baseUrl: 'https://a.com',
@@ -152,6 +157,7 @@ describe('readGitLabIntegrationConfigs', () => {
     expect(output).toEqual([
       {
         host: 'gitlab.com',
+        group: '',
         apiBaseUrl: 'https://gitlab.com/api/v4',
         baseUrl: 'https://gitlab.com',
       },

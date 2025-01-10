@@ -39,12 +39,14 @@ describe('gitlab core', () => {
 
   const configWithNoToken: GitLabIntegrationConfig = {
     host: 'gitlab.com',
+    group: '',
     apiBaseUrl: '<ignored>',
     baseUrl: '<ignored>',
   };
 
   const configSelfHosteWithRelativePath: GitLabIntegrationConfig = {
     host: 'gitlab.mycompany.com',
+    group: '',
     token: '0123456789',
     apiBaseUrl: '<ignored>',
     baseUrl: 'https://gitlab.mycompany.com/gitlab',
@@ -52,6 +54,7 @@ describe('gitlab core', () => {
 
   const configSelfHostedWithoutRelativePath: GitLabIntegrationConfig = {
     host: 'gitlab.mycompany.com',
+    group: '',
     token: '0123456789',
     apiBaseUrl: '<ignored>',
     baseUrl: 'https://gitlab.mycompany.com',

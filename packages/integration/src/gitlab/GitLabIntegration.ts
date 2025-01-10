@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { basicIntegrations, defaultScmResolveUrl } from '../helpers';
+import parseGitUrl from 'git-url-parse';
+import { defaultScmResolveUrl } from '../helpers';
 import { ScmIntegration, ScmIntegrationsFactory } from '../types';
 import {
   GitLabIntegrationConfig,
@@ -31,10 +32,12 @@ export class GitLabIntegration implements ScmIntegration {
     const configs = readGitLabIntegrationConfigs(
       config.getOptionalConfigArray('integrations.gitlab') ?? [],
     );
-    return basicIntegrations(
-      configs.map(c => new GitLabIntegration(c)),
-      i => i.config.host,
-    );
+    const integrations = configs.map(c => new GitLabIntegration(c));
+    return {
+      list: () => integrations,
+      byUrl: url => integrations.find(i => i.isUrlApplicable(url)),
+      byHost: host => integrations.find(i => i.config.host === host),
+    };
   };
 
   constructor(private readonly integrationConfig: GitLabIntegrationConfig) {}
@@ -44,7 +47,8 @@ export class GitLabIntegration implements ScmIntegration {
   }
 
   get title(): string {
-    return this.integrationConfig.host;
+    const { host, group } = this.integrationConfig;
+    return group ? `${host}/${group}` : host;
   }
 
   get config(): GitLabIntegrationConfig {
@@ -61,6 +65,14 @@ export class GitLabIntegration implements ScmIntegration {
 
   resolveEditUrl(url: string): string {
     return replaceGitLabUrlType(url, 'edit');
+  }
+
+  isUrlApplicable(url: string | URL): boolean {
+    const parsedUrl = parseGitUrl(url instanceof URL ? url.toString() : url);
+    if (this.config.host !== parsedUrl.resource) {
+      return false;
+    }
+    return parsedUrl.full_name.startsWith(this.config.group);
   }
 }
 

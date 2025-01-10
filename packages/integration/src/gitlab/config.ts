@@ -33,6 +33,14 @@ export type GitLabIntegrationConfig = {
   host: string;
 
   /**
+   * The group to use for this provider.
+   *
+   * The integration only activate for URLs within designated GitLab groups or their subgroups.
+   * If not provided, it defaults to all URLs from any group.
+   */
+  group: string;
+
+  /**
    * The base URL of the API of this provider, e.g.
    * `https://gitlab.com/api/v4`, with no trailing slash.
    *
@@ -66,13 +74,14 @@ export function readGitLabIntegrationConfig(
   config: Config,
 ): GitLabIntegrationConfig {
   const host = config.getString('host');
+  const group = config.getOptionalString('group') ?? '';
   let apiBaseUrl = config.getOptionalString('apiBaseUrl');
   const token = config.getOptionalString('token')?.trim();
   let baseUrl = config.getOptionalString('baseUrl');
   if (apiBaseUrl) {
     apiBaseUrl = trimEnd(apiBaseUrl, '/');
-  } else if (host === GITLAB_HOST) {
-    apiBaseUrl = GITLAB_API_BASE_URL;
+  } else {
+    apiBaseUrl = `https://${host}/api/v4`;
   }
 
   if (baseUrl) {
@@ -85,7 +94,7 @@ export function readGitLabIntegrationConfig(
     throw new Error(
       `Invalid GitLab integration config, '${host}' is not a valid host`,
     );
-  } else if (!apiBaseUrl || !isValidUrl(apiBaseUrl)) {
+  } else if (!isValidUrl(apiBaseUrl)) {
     throw new Error(
       `Invalid GitLab integration config, '${apiBaseUrl}' is not a valid apiBaseUrl`,
     );
@@ -95,7 +104,7 @@ export function readGitLabIntegrationConfig(
     );
   }
 
-  return { host, token, apiBaseUrl, baseUrl };
+  return { host, group, token, apiBaseUrl, baseUrl };
 }
 
 /**
@@ -116,6 +125,7 @@ export function readGitLabIntegrationConfigs(
   if (!result.some(c => c.host === GITLAB_HOST)) {
     result.push({
       host: GITLAB_HOST,
+      group: '',
       apiBaseUrl: GITLAB_API_BASE_URL,
       baseUrl: `https://${GITLAB_HOST}`,
     });

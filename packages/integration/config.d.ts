@@ -244,6 +244,15 @@ export interface Config {
        */
       host: string;
       /**
+       * The group to use for this provider.
+       *
+       * The integration only activate for URLs within designated GitLab groups or their subgroups.
+       * If not provided, it defaults to all URLs from any group.
+       *
+       * @visibility frontend
+       */
+      group?: string;
+      /**
        * The base URL of the API of this provider, e.g.
        * "https://gitlab.com/api/v4", with no trailing slash.
        *

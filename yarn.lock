@@ -4734,6 +4734,7 @@ __metadata:
     lodash: ^4.17.21
     luxon: ^3.0.0
     msw: ^1.0.0
+    typescript: ~5.2.0
   languageName: unknown
   linkType: soft
 

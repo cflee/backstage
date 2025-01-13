@@ -32,8 +32,8 @@
     "build": "backstage-cli package build",
     "clean": "backstage-cli package clean",
     "lint": "backstage-cli package lint",
-    "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack",
+    "prepack": "tsc && backstage-cli package build && backstage-cli package prepack",
+    "postpack": "backstage-cli repo clean && backstage-cli package postpack",
     "test": "backstage-cli package test"
   },
   "dependencies": {
@@ -52,7 +52,8 @@
     "@backstage/cli": "workspace:^",
     "@backstage/config-loader": "workspace:^",
     "@types/luxon": "^3.0.0",
-    "msw": "^1.0.0"
+    "msw": "^1.0.0",
+    "typescript": "~5.2.0"
   },
   "configSchema": "config.d.ts"
 }
